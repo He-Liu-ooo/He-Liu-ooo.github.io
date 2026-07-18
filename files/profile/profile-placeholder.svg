@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="112" height="136" viewBox="0 0 112 136" role="img" aria-labelledby="title description">
+  <title id="title">Liu He profile photo placeholder</title>
+  <desc id="description">A neutral silhouette marking where a profile photo will appear.</desc>
+  <rect width="112" height="136" fill="#f2f2f2"/>
+  <circle cx="56" cy="44" r="22" fill="#c7c7c7"/>
+  <path d="M20 124c2-31 16-48 36-48s34 17 36 48" fill="#c7c7c7"/>
+</svg>

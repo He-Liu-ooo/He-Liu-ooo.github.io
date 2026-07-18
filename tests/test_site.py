@@ -4,6 +4,7 @@ import re
 import subprocess
 import unittest
 from urllib.parse import urlparse
+import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -276,6 +277,54 @@ class HomepageContentTests(unittest.TestCase):
                 for tag, attrs in parser.tags
             )
         )
+
+
+class PresentationAndResourceTests(unittest.TestCase):
+    def test_stylesheet_is_responsive_accessible_and_self_contained(self):
+        stylesheet_path = ROOT / "styles.css"
+        self.assertTrue(stylesheet_path.is_file(), "styles.css must exist")
+        stylesheet = stylesheet_path.read_text(encoding="utf-8")
+        for required_rule in ("@media", ":focus-visible", "max-width"):
+            with self.subTest(rule=required_rule):
+                self.assertIn(required_rule, stylesheet)
+        self.assertNotIn("http://", stylesheet)
+        self.assertNotIn("https://", stylesheet)
+
+    def test_all_local_homepage_resources_exist(self):
+        _, parser, _ = parse_homepage()
+        local_paths = []
+        for tag, attrs in parser.tags:
+            attribute = "href" if tag == "link" else "src" if tag == "img" else None
+            if attribute is None or attribute not in attrs:
+                continue
+            resource = attrs[attribute]
+            parsed = urlparse(resource)
+            if not parsed.scheme and not resource.startswith("//"):
+                local_paths.append(parsed.path)
+
+        self.assertTrue(local_paths, "homepage must reference local resources")
+        for local_path in local_paths:
+            with self.subTest(path=local_path):
+                self.assertTrue((ROOT / local_path).is_file())
+
+    def test_profile_placeholder_is_accessible(self):
+        placeholder_path = ROOT / "files/profile/profile-placeholder.svg"
+        self.assertTrue(placeholder_path.is_file(), "profile placeholder must exist")
+        source = placeholder_path.read_text(encoding="utf-8")
+        self.assertIn("<title", source)
+        root = ET.parse(placeholder_path).getroot()
+        title = root.find("{http://www.w3.org/2000/svg}title")
+        self.assertIsNotNone(title)
+        self.assertEqual(title.text, "Liu He profile photo placeholder")
+
+    def test_public_download_locations_exist(self):
+        for relative_path in (
+            "files/cv/.gitkeep",
+            "files/papers/.gitkeep",
+            "files/slides/.gitkeep",
+        ):
+            with self.subTest(path=relative_path):
+                self.assertTrue((ROOT / relative_path).is_file())
 
 
 if __name__ == "__main__":
