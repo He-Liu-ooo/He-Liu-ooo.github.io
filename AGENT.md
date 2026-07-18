@@ -8,7 +8,6 @@ This repository publishes Liu He's English academic homepage through GitHub Page
 - `styles.css` provides the responsive Pure Monochrome presentation.
 - `files/profile/` contains the public profile image.
 - `files/cv/`, `files/papers/`, and `files/slides/` contain public downloads.
-- `tests/test_site.py` provides standard-library checks for content, privacy, structure, and resources.
 
 Keep the site static. Do not add JavaScript, a framework, a package manager, analytics, external fonts, or build tooling unless the owner changes the requirements.
 
@@ -16,7 +15,7 @@ Keep the site static. Do not add JavaScript, a framework, a package manager, ana
 
 The root `CV.pdf` is a private source containing a phone number and full address. It is ignored and must never be staged, committed, or published. Enable the public CV link only after placing a sanitized copy under `files/cv/`. Do not publish unapproved sensitive information. Everything under `files/` becomes public.
 
-Binary public downloads, especially CV PDFs, require manual content and privacy inspection before staging because automated UTF-8 tests cannot inspect them.
+Binary public downloads, especially CV PDFs, require manual content and privacy inspection before staging because simple text inspection may not reveal their contents.
 
 ## Content Maintenance
 
@@ -30,19 +29,13 @@ Binary public downloads, especially CV PDFs, require manual content and privacy 
 
 ## Verification
 
-Run the automated checks:
-
-```sh
-python3 -m unittest discover -s tests -v
-```
-
 Preview the site locally:
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-The server runs in the foreground; use another terminal for tests and a browser for the preview. The loopback binding keeps the repository, including any ignored root `CV.pdf`, off the lab network. Inspect desktop and mobile layouts and confirm there is no horizontal overflow.
+The server runs in the foreground; use a browser for the preview. The loopback binding keeps the repository, including any ignored root `CV.pdf`, off the lab network. Inspect desktop and mobile layouts, verify all local links and assets, and confirm there is no horizontal overflow.
 
 Before committing, inspect the staged file names:
 

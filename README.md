@@ -10,13 +10,7 @@ From the repository root, start a local server:
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-The server runs in the foreground; use another terminal to run the checks and a browser to open http://localhost:8000. Binding to loopback avoids exposing the repository, including any ignored root `CV.pdf`, on the lab network.
-
-Run the checks with:
-
-```sh
-python3 -m unittest discover -s tests -v
-```
+The server runs in the foreground; use a browser to open http://localhost:8000. Binding to loopback avoids exposing the repository, including any ignored root `CV.pdf`, on the lab network. Check the desktop and mobile layouts and verify the local links before publishing.
 
 ## Update Public Content
 
