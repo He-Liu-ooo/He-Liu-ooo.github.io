@@ -5,3 +5,7 @@
 .worktrees/
 .superpowers/
 docs/superpowers/
+
+# Python cache artifacts.
+__pycache__/
+*.py[cod]
