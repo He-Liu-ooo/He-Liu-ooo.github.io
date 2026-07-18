@@ -1,0 +1,7 @@
+# Private source CV; publish only a sanitized copy under files/cv/.
+/CV.pdf
+
+# Local worktrees, design, and workflow artifacts.
+.worktrees/
+.superpowers/
+docs/superpowers/
