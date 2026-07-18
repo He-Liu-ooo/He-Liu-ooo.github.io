@@ -157,6 +157,86 @@ class RepositoryPrivacyTests(unittest.TestCase):
                 self.assertNotIn(TEL_SCHEME, text.lower())
 
 
+class RepositoryDocumentationTests(unittest.TestCase):
+    def test_agent_guide_documents_repository_maintenance(self):
+        agent_path = ROOT / "AGENT.md"
+        self.assertTrue(agent_path.is_file(), "AGENT.md must exist")
+        source = agent_path.read_text(encoding="utf-8")
+        required = (
+            "# Repository Purpose",
+            "## Architecture",
+            "## Privacy",
+            "## Content Maintenance",
+            "## Verification",
+            "python3 -m unittest discover -s tests -v",
+            "python3 -m http.server 8000 --bind 127.0.0.1",
+            "runs in the foreground",
+            "another terminal",
+            "git diff --cached --name-only",
+            "CV.pdf",
+            "Binary public downloads",
+            "manual content and privacy inspection before staging",
+            "automated UTF-8 tests cannot inspect them",
+            ".worktrees/",
+        )
+        for text in required:
+            with self.subTest(text=text):
+                self.assertIn(text, source)
+
+    def test_readme_documents_preview_and_public_content_locations(self):
+        readme_path = ROOT / "README.md"
+        self.assertTrue(readme_path.is_file(), "README.md must exist")
+        source = readme_path.read_text(encoding="utf-8")
+        self.assertIn("intended to be published with GitHub Pages", source)
+        required = (
+            "python3 -m http.server 8000 --bind 127.0.0.1",
+            "files/profile/profile-placeholder.svg",
+            "Research interests statement forthcoming.",
+            "files/papers/",
+            "files/slides/",
+            "files/cv/",
+            "custom domain",
+            "runs in the foreground",
+            "another terminal",
+            "wildcard DNS",
+            "https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site",
+        )
+        for text in required:
+            with self.subTest(text=text):
+                self.assertIn(text, source)
+
+        custom_domain_steps = (
+            "verify the custom domain in your GitHub account settings",
+            "add the verified domain in repository **Settings → Pages**",
+            "configure the required DNS records with your domain registrar",
+        )
+        self.assertTrue(
+            all(step in source for step in custom_domain_steps),
+            "README must include every custom-domain security step",
+        )
+        positions = [source.index(step) for step in custom_domain_steps]
+        self.assertEqual(
+            positions,
+            sorted(positions),
+            "Custom-domain steps must verify, add to Pages, then configure DNS",
+        )
+
+    def test_links_are_normalized_and_stable(self):
+        links_path = ROOT / "LINKS.md"
+        self.assertTrue(links_path.is_file(), "LINKS.md must exist")
+        source = links_path.read_text(encoding="utf-8")
+        self.assertEqual(
+            source.splitlines(),
+            [
+                "Email: he-l23@mails.tsinghua.edu.cn",
+                "GitHub: https://github.com/He-Liu-ooo",
+                "Google Scholar: https://scholar.google.com/citations?user=Z6jQAUkAAAAJ&hl=en",
+                "LinkedIn: https://www.linkedin.com/in/liu-he-ab2730329",
+            ],
+        )
+        self.assertNotIn("gmla=", source)
+
+
 class HomepageContentTests(unittest.TestCase):
     def test_document_metadata_and_balanced_sections(self):
         source, parser, _ = parse_homepage()
