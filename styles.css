@@ -33,7 +33,6 @@ footer { width: min(100% - 2.5rem, 42rem); margin-inline: auto; }
   height: 8.5rem;
   margin: 0 auto 1.2rem;
   border: 1px solid var(--faint);
-  filter: grayscale(100%);
   object-fit: cover;
 }
 
